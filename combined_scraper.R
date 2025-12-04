@@ -63,7 +63,7 @@ today_data <- today_row %>%
 
 
 
-csv_path <- "/Users/akarshgaonkar/Documents/project_data/final_df_WD.csv"
+csv_path <- "final_df_WD.csv"
 
 
 if (file.exists(csv_path)) {
