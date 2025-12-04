@@ -2,10 +2,12 @@ name: Update data and visualizations
 
 on:
   schedule:
-    # runs every day at 01:00 UTC (adjust as needed)
-    - cron: "0 1 * * *"
-  workflow_dispatch: {}
+    - cron: "0 6 * * *"  # runs daily at 6:00 UTC (~1 AM EST)
+  workflow_dispatch:
 
+permissions:
+  contents: write
+  
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -23,9 +25,21 @@ jobs:
           use-public-rspm: true
 
       - name: Install R packages
-        run: |
-          Rscript -e 'install.packages(c("tidyverse","lubridate","ggplot2","readr","rmarkdown","httr","jsonlite","dplyr","tidyr","tidyquant","zoo"), repos = "https://cloud.r-project.org")'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::tidyverse
+            any::lubridate
+            any::ggplot2
+            any::readr
+            any::httr
+            any::jsonlite
+            any::dplyr
+            any::tidyr
+            any::tidyquant
+            any::zoo
 
+            
       - name: Run scraper to update CSV
         run: |
           Rscript combined_scraper.R
