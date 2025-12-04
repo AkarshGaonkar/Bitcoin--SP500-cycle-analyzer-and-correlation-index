@@ -24,7 +24,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("tidyverse","lubridate","ggplot2","readr","rmarkdown"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("tidyverse","lubridate","ggplot2","readr","rmarkdown","httr","jsonlite","dplyr","tidyr","tidyquant","zoo"), repos = "https://cloud.r-project.org")'
 
       - name: Run scraper to update CSV
         run: |
