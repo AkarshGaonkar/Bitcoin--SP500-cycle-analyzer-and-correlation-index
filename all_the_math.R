@@ -11,7 +11,7 @@ library(ggplot2)
 
 # 0. Load data -------------------------------------------------------------
 
-prices <- read_csv("/Users/akarshgaonkar/Documents/project_data/final_df_WD.csv",
+prices <- read_csv("final_df_WD.csv",
                    show_col_types = FALSE) %>%
   mutate(Date = ymd(Date)) %>%
   arrange(Date)
