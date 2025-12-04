@@ -48,7 +48,7 @@ btc_cum <- prices %>%
   ) %>%
   ungroup()
 
-ggplot(btc_cum,
+p1 <- ggplot(btc_cum,
        aes(x = doy, y = btc_cum * 100, color = factor(Year), group = Year)) +
   geom_line() +
   labs(
@@ -75,7 +75,7 @@ snp_cum <- prices %>%
   ) %>%
   ungroup()
 
-ggplot(snp_cum,
+p2 <- ggplot(snp_cum,
        aes(x = doy, y = snp_cum * 100, color = factor(Year), group = Year)) +
   geom_line() +
   labs(
@@ -103,7 +103,7 @@ corr_df <- prices %>%
   )
 
 # Plot rolling correlation
-ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
+p3 <- ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
   geom_line(color = "purple") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
   labs(
@@ -112,3 +112,7 @@ ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
     y     = "Correlation (ρ)"
   ) +
   theme_tq()
+
+ggsave("btc_return.png", p1, width = 8, height = 5, dpi = 300)
+ggsave("sp500_returns.png", p2, width = 8, height = 5, dpi = 300)
+ggsave("btc_sp500_overlay.png", p3, width = 8, height = 5, dpi = 300)
