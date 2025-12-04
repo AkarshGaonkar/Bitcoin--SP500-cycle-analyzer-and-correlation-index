@@ -35,6 +35,7 @@ jobs:
             any::httr
             any::jsonlite
             any::dplyr
+            any::rmarkdown
             any::tidyr
             any::tidyquant
             any::zoo
