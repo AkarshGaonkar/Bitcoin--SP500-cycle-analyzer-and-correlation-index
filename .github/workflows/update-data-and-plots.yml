@@ -46,13 +46,13 @@ jobs:
       - name: Run math/visualizer script
         run: Rscript all_the_math.R
 
-      - name: Update README with latest PNGs
+      - name: Update README with latest htmls
         run: |
-          # Find all PNG files modified in this run (or all PNGs)
-          PNG_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
+          # Find all html files modified in this run (or all htmls)
+          html_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.html$' || find . -name "*.html" -type f)
           
-          if [ -z "$PNG_FILES" ]; then
-            echo "No PNG files found to add to README"
+          if [ -z "$html_FILES" ]; then
+            echo "No html files found to add to README"
             exit 0
           fi
           
@@ -65,13 +65,13 @@ jobs:
           ## Visualizations
           EOF
           
-          for png in $PNG_FILES; do
-            if [ -f "$png" ]; then
-              PNG_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
+          for html in $html_FILES; do
+            if [ -f "$html" ]; then
+              html_NAME=$(basename "$html" .html | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
               cat >> README_temp.md << EOF
           
-          ### $PNG_NAME
-          ![${PNG_NAME// /-}]($png)
+          ### $html_NAME
+          ![${html_NAME// /-}]($html)
           EOF
             fi
           done
@@ -80,12 +80,12 @@ jobs:
           cat README.md >> README_temp.md || true
           
           mv README_temp.md README.md
-          echo "Updated README with PNGs: $PNG_FILES"
+          echo "Updated README with htmls: $html_FILES"
 
       - name: Commit and push changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add final_df_WD.csv *.png README.md
+          git add final_df_WD.csv *.html README.md
           git commit -m "Update data, visualizations, and README" || echo "No changes to commit"
           git push origin || echo "No changes to push"
