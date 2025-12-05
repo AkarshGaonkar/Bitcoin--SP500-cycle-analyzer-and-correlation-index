@@ -8,6 +8,7 @@ library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(plotly)
 
 # 0. Load data -------------------------------------------------------------
 
@@ -58,6 +59,7 @@ p1 <- ggplot(btc_cum,
     color = "Year"
   ) +
   theme_minimal()
+p1 <- ggplotly(p1, tooltip = c("x", "y"))
 
 # 2) Seasonality of S&P prices --------------------------------------------
 
@@ -85,6 +87,7 @@ p2 <- ggplot(snp_cum,
     color = "Year"
   ) +
   theme_minimal()
+p2 <- ggplotly(p1, tooltip = c("x", "y"))
 
 # 3) Rolling 250-day Pearson correlation BTC vs S&P ------------------------
 
@@ -112,6 +115,7 @@ p3 <- ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
     y     = "Correlation (ρ)"
   ) +
   theme_tq()
+p3 <- ggplotly(p1, tooltip = c("x", "y"))
 
 ggsave("btc_return.png", p1, width = 8, height = 5, dpi = 300)
 ggsave("sp500_returns.png", p2, width = 8, height = 5, dpi = 300)
