@@ -49,32 +49,35 @@ jobs:
         run: |
           # Find all PNG files modified in this run (or all PNGs)
           PNG_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
-
+          
           if [ -z "$PNG_FILES" ]; then
             echo "No PNG files found to add to README"
             exit 0
           fi
-
-          # Create README from scratch (no quotes around EOF, no extra indentation)
+          
+          # Create/update images section in README
           cat > README_temp.md << EOF
-# Daily BTC/SP500 Analysis
-
-Latest update: $(date)
-
-## Visualizations
-EOF
-
+          # Daily BTC/SP500 Analysis
+          
+          Latest update: $(date)
+          
+          ## Visualizations
+          EOF
+          
           for png in $PNG_FILES; do
             if [ -f "$png" ]; then
               PNG_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
               cat >> README_temp.md << EOF
-
-### $PNG_NAME
-![${PNG_NAME// /-}]($png)
-EOF
+          
+          ### $PNG_NAME
+          ![${PNG_NAME// /-}]($png)
+          EOF
             fi
           done
-
+          
+          # Append rest of your existing README content if needed
+          cat README.md >> README_temp.md || true
+          
           mv README_temp.md README.md
           echo "Updated README with PNGs: $PNG_FILES"
 
