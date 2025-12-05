@@ -11,7 +11,6 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,27 +39,52 @@ jobs:
             any::tidyquant
             any::zoo
 
-            
       - name: Run scraper to update CSV
-        run: |
-          Rscript combined_scraper.R
+        run: Rscript combined_scraper.R
 
       - name: Run math/visualizer script
-        run: |
-          Rscript all_the_math.R
+        run: Rscript all_the_math.R
 
-      # Optional: if you render README.Rmd to README.md in all_the_math.R, skip this
-      # and keep it only if you want GH Actions to knit README for you.
-      # - name: Render README (if using README.Rmd)
-      #   run: |
-      #     Rscript -e 'rmarkdown::render("README.Rmd")'
+      - name: Update README with latest PNGs
+        run: |
+          # Find all PNG files modified in this run (or all PNGs)
+          PNG_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
+          
+          if [ -z "$PNG_FILES" ]; then
+            echo "No PNG files found to add to README"
+            exit 0
+          fi
+          
+          # Create/update images section in README
+          cat > README_temp.md << 'EOF'
+          # Daily BTC/SP500 Analysis
+          
+          Latest update: $(date)
+          
+          ## Visualizations
+          EOF
+          
+          for png in $PNG_FILES; do
+            if [ -f "$png" ]; then
+              PNG_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
+              cat >> README_temp.md << EOF
+          
+          ### $PNG_NAME
+          ![${PNG_NAME// /-}]($png)
+          EOF
+            fi
+          done
+          
+          # Append rest of your existing README content if needed
+          cat README.md >> README_temp.md || true
+          
+          mv README_temp.md README.md
+          echo "Updated README with PNGs: $PNG_FILES"
 
       - name: Commit and push changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add final_df_WD.csv
-          git add *.png
-          git add README.md README.Rmd 2>/dev/null || true
-          git commit -m "Update data and visualizations" || echo "No changes to commit"
+          git add final_df_WD.csv *.png README.md
+          git commit -m "Update data, visualizations, and README" || echo "No changes to commit"
           git push origin || echo "No changes to push"
