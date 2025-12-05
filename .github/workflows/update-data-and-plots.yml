@@ -38,7 +38,6 @@ jobs:
             any::tidyr
             any::tidyquant
             any::zoo
-            any::plotly
 
       - name: Run scraper to update CSV
         run: Rscript combined_scraper.R
@@ -46,38 +45,41 @@ jobs:
       - name: Run math/visualizer script
         run: Rscript all_the_math.R
 
-      - name: Update README with latest pngs
+      - name: Update README with latest PNGs
         run: |
-          # Find all png files modified in this run (or all pngs)
-          png_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
+          # Find all PNG files modified in this run (or all PNGs)
+          PNG_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
           
-          if [ -z "$png_FILES" ]; then
-            echo "No png files found to add to README"
+          if [ -z "$PNG_FILES" ]; then
+            echo "No PNG files found to add to README"
             exit 0
           fi
           
           # Create/update images section in README
-          cat > README_temp.md << EOF
-# Daily BTC/SP500 Analysis
-
-Latest update: $(date)
-
-## Visualizations
-EOF
+          cat > README_temp.md << 'EOF'
+          # Daily BTC/SP500 Analysis
           
-          for png in $png_FILES; do
+          Latest update: $(date)
+          
+          ## Visualizations
+          EOF
+          
+          for png in $PNG_FILES; do
             if [ -f "$png" ]; then
-              png_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
-              
-
-### $png_NAME
-![${png_NAME// /-}]($png)
-EOF
+              PNG_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
+              cat >> README_temp.md << EOF
+          
+          ### $PNG_NAME
+          ![${PNG_NAME// /-}]($png)
+          EOF
             fi
           done
           
+          # Append rest of your existing README content if needed
+          #cat README.md >> README_temp.md || true
+          
           mv README_temp.md README.md
-          echo "Updated README with pngs: $png_FILES"
+          echo "Updated README with PNGs: $PNG_FILES"
 
       - name: Commit and push changes
         run: |
