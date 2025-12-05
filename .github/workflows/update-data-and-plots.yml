@@ -68,7 +68,7 @@ EOF
           for png in $png_FILES; do
             if [ -f "$png" ]; then
               png_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
-              cat >> README_temp.md << EOF
+              
 
 ### $png_NAME
 ![${png_NAME// /-}]($png)
