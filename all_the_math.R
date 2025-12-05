@@ -107,7 +107,7 @@ p3 <- ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
   geom_line(color = "purple") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
   labs(
-    title = "Rolling 45-Day Pearson Correlation: BTC vs S&P 500",
+    title = "Rolling 250-Day Pearson Correlation: BTC vs S&P 500",
     x     = "Date",
     y     = "Correlation (ρ)"
   ) +
