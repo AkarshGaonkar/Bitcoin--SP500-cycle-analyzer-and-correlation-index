@@ -56,7 +56,7 @@ jobs:
           fi
           
           # Create/update images section in README
-          cat > README_temp.md << 'EOF'
+          cat > README_temp.md << EOF
           # Daily BTC/SP500 Analysis
           
           Latest update: $(date)
