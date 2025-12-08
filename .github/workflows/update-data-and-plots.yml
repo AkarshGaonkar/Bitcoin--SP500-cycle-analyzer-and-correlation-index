@@ -60,6 +60,8 @@ jobs:
           # Daily BTC/SP500 Analysis
           
           Latest update: $(date)
+
+          Hello my name is Akarsh
           
           ## Visualizations
           EOF
