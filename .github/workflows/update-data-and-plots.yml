@@ -7,92 +7,100 @@ on:
 
 permissions:
   contents: write
-
+  
 jobs:
-  update-data:
+  update:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-
-      - name: Checkout
+      - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Setup R
+      - name: Set up R
         uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
 
-      - name: Install packages
-        run: |
-          Rscript -e "install.packages(c('tidyverse','httr','readr','lubridate'))"
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::tidyverse
+            any::lubridate
+            any::ggplot2
+            any::readr
+            any::httr
+            any::jsonlite
+            any::dplyr
+            any::rmarkdown
+            any::tidyr
+            any::tidyquant
+            any::zoo
+            any::ggtext
+      - name: Run scraper to update CSV
+        run: Rscript combined_scraper.R
 
-      - name: Run update script
-        run: |
-          Rscript scripts/update_data.R
-
-      - name: Run analysis script
-        run: |
-          Rscript scripts/analysis.R
+      - name: Run math/visualizer script
+        run: Rscript all_the_math.R
 
       - name: Update README with latest PNGs
         run: |
-          PNG_FILES=$(find . -name "*.png" -type f)
-
+          # Find all PNG files modified in this run (or all PNGs)
+          PNG_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 | grep '\.png$' || find . -name "*.png" -type f)
+          
           if [ -z "$PNG_FILES" ]; then
-            echo "No PNG files found"
+            echo "No PNG files found to add to README"
             exit 0
           fi
-
-          cat > README_temp.md << 'EOF'
+          
+          # Create/update images section in README
+          cat > README_temp.md << EOF
           # Daily BTC/SP500 Analysis
-
-          ## Overview
-          This project analyzes how Bitcoin and the S&P 500 move together over time using two web-based data sources that update daily.
-          Bitcoin prices come from a public cryptocurrency API that provides daily open, high, low, close and volume in U.S. dollars, while S&P 500 index levels are downloaded as CSV files from a free market data provider that publishes historical daily prices for major equity indices.
-
-          Tracking both series together gives a current picture of how tightly Bitcoin is linked to the broad U.S. equity market.
-
-          ## Automated data pipeline
-          A GitHub Actions workflow runs once per day. It pulls any new observations, appends them to the CSV files, then refreshes the charts.
-          The pipeline:
-          - downloads new daily data
-          - updates CSVs incrementally
-          - cleans dates and computes returns
-          - calculates a rolling 250-day correlation
-
+          
+          Latest update: $(date)
+          Hello my name is Akarsh, and this is my project. 
+          This project tracks the relationship between Bitcoin and the S&P 500 using two live, web-based data sources that update every trading day.
+          Bitcoin prices are pulled from a public cryptocurrency data API that provides daily open, high, low, close, and volume in U.S. dollars,
+          while S&P 500 index levels are downloaded in CSV format from a free market-data site that maintains historical daily prices for major 
+          equity indices.  A GitHub Actions workflow runs once per day in the cloud, automatically executing R scripts that download the latest
+          data from both sources, clean and align the time series by date, and append the new observations to a growing CSV inside the repository.
+          This automated data pipeline means the dataset and plots update themselves without manual intervention, demonstrating how reproducible
+          workflows and scheduled jobs can maintain an always-current view of a financial relationship.
+            The data are wrangled in R using tidyverse tools to filter out missing values, convert raw prices into daily returns, and compute
+          rolling six-month Pearson correlations between Bitcoin and S&P 500 returns so that short-term co-movements become visible.
+          The resulting visualizations are simple time-series line charts: one chart shows Bitcoin returns, one shows S&P 500 returns, and a
+          combined chart overlays both so a viewer with no finance background can see when the two markets move together or diverge—for example,
+          periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks.  The README on GitHub
+          explains, in plain language, what each axis represents (dates on the horizontal axis, returns or correlation on the vertical axis)
+          and how to interpret the lines as “up days,” “down days,” and “stronger or weaker correlation,” so that even someone unfamiliar with
+          time-series analysis can look at the charts and understand whether Bitcoin is acting more like a traditional risk asset or providing 
+          diversification relative to the stock market.
+          
           ## Visualizations
-          Three time series charts are included:
-          - Bitcoin cumulative return (per year)
-          - S&P 500 cumulative return (per year)
-          - Rolling 250-day correlation between the two assets
-
-          ## Interpretation
-          Rising lines show periods of gains, falling lines show losses.
-          Correlation values near +1 mean the two markets move together.
-          Low correlation means weak comovement.
-
-          ## Plots
           EOF
-
-          # append image markdown
-          for FILE in $PNG_FILES; do
-            NAME=$(basename "$FILE")
-            echo "" >> README_temp.md
-            echo "![]($NAME)" >> README_temp.md
+          
+          for png in $PNG_FILES; do
+            if [ -f "$png" ]; then
+              PNG_NAME=$(basename "$png" .png | sed 's/_/ /g' | tr '[:lower:]' '[:upper:]')
+              cat >> README_temp.md << EOF
+          
+          ### $PNG_NAME
+          ![${PNG_NAME// /-}]($png)
+          EOF
+            fi
           done
-
-          # move into place
+          
+          # Append rest of your existing README content if needed
+          #cat README.md >> README_temp.md || true
+          
           mv README_temp.md README.md
-
-      - name: Commit and push
+          echo "Updated README with PNGs: $PNG_FILES"
+      - name: Commit and push changes
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-
-          git add README.md data/*.csv plots/*.png || true
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
-
-          git commit -m "Daily update: $(date)"
-          git push
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add final_df_WD.csv *.png README.md
+          git commit -m "Update data, visualizations, and README" || echo "No changes to commit"
+          git push origin || echo "No changes to push"
