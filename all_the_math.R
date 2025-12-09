@@ -8,6 +8,7 @@ library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(ggtext)
 
 # 0. Load data -------------------------------------------------------------
 
@@ -29,22 +30,6 @@ prices_long <- prices %>%
     month  = factor(month(Date, label = TRUE, abbr = TRUE),
                     levels = month.abb)
   )
-
-# subtitles ---------------------------------------------------------------
-
-btc_sub  <- "This chart shows how Bitcoin’s daily returns have moved over time, with spikes up on strong days and drops on weak days.
-In 2022 there is a clear period of sustained downward movement, mirroring the broader market selloff and macro uncertainty in that year,
-while most other periods show a general upward drift with intermittent volatility."
-
-snp_sub  <- "This graph tracks the daily returns of the S&P 500 index, representing the performance of large U.S. stocks. Like Bitcoin,
-it shows a noticeable downturn in 2022, reflecting the same global shocks and tighter financial conditions, while other years recover
-with more frequent positive days and an overall upward trend"
-
-corr_sub <- "The Pearson correlation graph summarizes how closely Bitcoin and S&P 500 returns move together over rolling 250‑day windows.
-The gap from 2020 until late 2021 appears because there are not yet 250 days of overlapping data to compute the statistic, so the line only
-begins once that window is full. After it starts, the correlation mostly sits around 0.75, which indicates a strong positive
-relationship: over each 250‑day period, when the S&P 500 tends to go up, Bitcoin has also tended to move in the same direction, and vice versa"
-
 
 # 1) Seasonality of Bitcoin prices ----------------------------------------
 
@@ -68,13 +53,19 @@ p1 <- ggplot(btc_cum,
        aes(x = doy, y = btc_cum * 100, color = factor(Year), group = Year)) +
   geom_line() +
   labs(
-    title = "Bitcoin Cumulative % Return Within Each Year",
+    title = "**Bitcoin Cumulative % Return Within Each Year**",
     x     = "Day of year",
     y     = "Cumulative return (%)",
-    subtitle = btc_sub,
+    subtitle = "*This chart shows how Bitcoin’s daily returns have moved over time, with spikes up on strong days and drops on weak days.
+In 2022 there is a clear period of sustained downward movement, mirroring the broader market selloff and macro uncertainty in that year,
+while most other periods show a general upward drift with intermittent volatility.*",
     color = "Year"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+    plot.title    = element_markdown(size = 14),
+    plot.subtitle = element_markdown(size = 10)
+  )
 
 # 2) Seasonality of S&P prices --------------------------------------------
 
@@ -96,10 +87,13 @@ p2 <- ggplot(snp_cum,
        aes(x = doy, y = snp_cum * 100, color = factor(Year), group = Year)) +
   geom_line() +
   labs(
-    title = "S&P 500 Cumulative % Return Within Each Year",
+    title = "**S&P 500 Cumulative % Return Within Each Year**",
     x     = "Day of year",
     y     = "Cumulative return (%)",
-    subtitle = snp_sub,
+    subtitle = "*This graph tracks the daily returns of the S&P 500 index, representing the performance of large U.S. stocks. Like Bitcoin,
+it shows a noticeable downturn in 2022, reflecting the same global shocks and tighter financial conditions, while other years recover
+with more frequent positive days and an overall upward trend.*"
+,
     color = "Year"
   ) +
   theme_minimal()
@@ -125,10 +119,14 @@ p3 <- ggplot(corr_df, aes(x = Date, y = roll_corr_45)) +
   geom_line(color = "purple") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
   labs(
-    title = "Rolling 250-Day Pearson Correlation: BTC vs S&P 500",
+    title = "**Rolling 250-Day Pearson Correlation: BTC vs S&P 500**",
     x     = "Date",
     y     = "Correlation (ρ)",
-    subtitle = btc_sub
+    subtitle = "*The Pearson correlation graph summarizes how closely Bitcoin and S&P 500 returns move together over rolling 250‑day windows.
+The gap from 2020 until late 2021 appears because there are not yet 250 days of overlapping data to compute the statistic, so the line only
+begins once that window is full. After it starts, the correlation mostly sits around 0.75, which indicates a strong positive
+relationship: over each 250‑day period, when the S&P 500 tends to go up, Bitcoin has also tended to move in the same direction, and vice versa.*"
+
   ) +
   theme_tq()
 
