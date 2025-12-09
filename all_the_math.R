@@ -137,7 +137,7 @@ when the S&P 500 tends to go up, Bitcoin has also tended to move in the same dir
   theme_tq() +
   theme(
     plot.title    = element_text(face = "bold", size = 14),
-    plot.subtitle = element_text(face = "italic", size = 10))
+    plot.subtitle = element_text(face = "italic", size = 10)
   )
 
 ggsave("btc_return.png", p1, width = 8, height = 5, dpi = 300)
