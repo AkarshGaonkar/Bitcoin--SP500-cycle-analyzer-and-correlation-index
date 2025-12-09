@@ -134,7 +134,7 @@ so the line only begins once that window is full. After it starts, the correlati
 sits around 0.75, which indicates a strong positive relationship: over each 250‑day period, 
 when the S&P 500 tends to go up, Bitcoin has also tended to move in the same direction, and vice versa."
   ) +
-  theme_tq() +
+  theme_minimal() +
   theme(
     plot.title    = element_text(face = "bold", size = 14),
     plot.subtitle = element_text(face = "italic", size = 10)
