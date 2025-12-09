@@ -101,6 +101,7 @@ jobs:
           # Append rest of your existing README content if needed
           #cat README.md >> README_temp.md || true
 
+          cat > README_temp.md << EOF
           ## Final Report and Overview
 
             This project analyzes how Bitcoin and the S&P 500 move together over time using two web-based data sources that update daily. Bitcoin
@@ -135,6 +136,7 @@ jobs:
           Beyond statistical ideas, details like date handling, incremental updates and clear visual design were critical. The project demonstrated
           the value of reproducible workflows and automated scheduling for time series analysis that needs to stay current. It also provided
           experience in turning messy web data into visual summaries that others can interpret at a glance.
+          EOF
           
           mv README_temp.md README.md
           echo "Updated README with PNGs: $PNG_FILES"
