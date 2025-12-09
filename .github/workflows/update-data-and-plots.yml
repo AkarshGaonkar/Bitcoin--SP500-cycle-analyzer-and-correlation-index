@@ -38,6 +38,7 @@ jobs:
             any::tidyr
             any::tidyquant
             any::zoo
+            any::ggtext
 
       - name: Run scraper to update CSV
         run: Rscript combined_scraper.R
