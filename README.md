@@ -11,15 +11,11 @@ data from both sources, clean and align the time series by date, and append the 
 This automated data pipeline means the dataset and plots update themselves without manual intervention, demonstrating how reproducible
 workflows and scheduled jobs can maintain an always-current view of a financial relationship.
 
-  The data are wrangled in R using tidyverse tools to filter out missing values, convert raw prices into daily returns, and compute
+  The data is wrangled in R using tidyverse tools to filter out missing values, convert raw prices into daily returns, and compute
 rolling six-month Pearson correlations between Bitcoin and S&P 500 returns so that short-term co-movements become visible.
 The resulting visualizations are simple time-series line charts: one chart shows Bitcoin returns, one shows S&P 500 returns, and a
 combined chart overlays both so a viewer with no finance background can see when the two markets move together or diverge—for example,
-periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks.  The README on GitHub
-explains, in plain language, what each axis represents (dates on the horizontal axis, returns or correlation on the vertical axis)
-and how to interpret the lines as “up days,” “down days,” and “stronger or weaker correlation,” so that even someone unfamiliar with
-time-series analysis can look at the charts and understand whether Bitcoin is acting more like a traditional risk asset or providing 
-diversification relative to the stock market.
+periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks.
 
 
 
