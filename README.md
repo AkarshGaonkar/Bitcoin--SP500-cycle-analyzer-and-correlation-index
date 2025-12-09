@@ -23,9 +23,20 @@ periods when both spike or crash at the same time versus periods when Bitcoin be
 
 ### BTC RETURN
 ![BTC-RETURN](./btc_return.png)
+This chart shows how Bitcoin’s daily returns have moved over time, with spikes up on strong days and drops on weak days. In 2022 there 
+is a clear period of sustained downward movement, mirroring the broader market selloff and macro uncertainty in that year, while most 
+other periods show a general upward drift with irelatively higher volatility
 
 ### SP500 RETURNS
 ![SP500-RETURNS](./sp500_returns.png)
+This graph tracks the daily returns of the S&P 500 index, representing the performance of large U.S. stocks. Like Bitcoin, it shows 
+a noticeable downturn in 2022, reflecting the same global shocks and tighter financial conditions, while other years recover with more 
+frequent positive days and an overall upward trend.
 
 ### BTC SP500 OVERLAY
 ![BTC-SP500-OVERLAY](./btc_sp500_overlay.png)
+The Pearson correlation graph is a visulaization of the Pearson index between BTC and the S&P 500 throught the past few years. It summarizes
+how closely Bitcoin and S&P 500 returns move together over rolling 250‑day windows. The gap from 2020 until late 2021 appears because 
+there are not yet 250 days of overlapping data to compute the statistic, so the line only begins once that window is full. 
+After it starts, the correlation mostly sits around 0.75, which indicates a strong positive relationship over each 250‑day period,
+when the S&P 500 tends to go up, Bitcoin has also tended to move in the same direction, and vice versa.
