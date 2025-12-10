@@ -1,6 +1,6 @@
 # Daily BTC/SP500 Analysis
 
-Latest update: Tue Dec  9 10:03:07 UTC 2025
+Latest update: Wed Dec 10 04:57:26 UTC 2025
 
 Hello my name is Akarsh, and this is my project. 
 This project tracks the relationship between Bitcoin and the S&P 500 using two live, web-based data sources that update every trading day.
@@ -10,16 +10,11 @@ equity indices.  A GitHub Actions workflow runs once per day in the cloud, autom
 data from both sources, clean and align the time series by date, and append the new observations to a growing CSV inside the repository.
 This automated data pipeline means the dataset and plots update themselves without manual intervention, demonstrating how reproducible
 workflows and scheduled jobs can maintain an always-current view of a financial relationship.
-  The data are wrangled in R using tidyverse tools to filter out missing values, convert raw prices into daily returns, and compute
-rolling six-month Pearson correlations between Bitcoin and S&P 500 returns so that short-term co-movements become visible.
+  The data is wrangled in R using tidyverse and other data handling tools to filter out missing values, convert raw prices into daily returns,
+and compute rolling six-month Pearson correlations between Bitcoin and S&P 500 returns so that short-term co-movements become visible.
 The resulting visualizations are simple time-series line charts: one chart shows Bitcoin returns, one shows S&P 500 returns, and a
 combined chart overlays both so a viewer with no finance background can see when the two markets move together or diverge—for example,
-periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks.  The README on GitHub
-explains, in plain language, what each axis represents (dates on the horizontal axis, returns or correlation on the vertical axis)
-and how to interpret the lines as “up days,” “down days,” and “stronger or weaker correlation,” so that even someone unfamiliar with
-time-series analysis can look at the charts and understand whether Bitcoin is acting more like a traditional risk asset or providing 
-diversification relative to the stock market.
-
+periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks. 
 ## Visualizations
 
 ### BTC RETURN
@@ -52,17 +47,19 @@ The cleaned data feed into time series visualizations designed for readers who m
 One chart shows Bitcoin’s cumulative percentage return within each calendar year. Another shows the same for the S&P 500. A third chart
 plots the rolling 250-day correlation between the two series. Line charts are used throughout because they clearly display how quantities
 change over time. The horizontal axis shows calendar date or day of year, and the vertical axis shows cumulative return in percent or
-the correlation value between −1 and 1. The README file and axis labels explain that rising lines mean positive returns, falling lines
-mean losses and correlation values near +1 show the two markets move together. Values near 0 indicate weak co-movement. This allows a
-non-expert to scan the plots and see shared downturns around major events and generally high positive correlation in recent years.
-Bitcoin has behaved more like a risk asset than an independent diversifier.
+the correlation value between −1 and 1. The visualizations explain that rising lines mean positive returns, falling lines
+mean losses and correlation values near +1 show the two markets move together. Values near 0 indicate weak co-movement and negative
+index values mean opposite movement. This allows a non-expert to scan the plots and see shared downturns around major events and generally
+high positive correlation in recent years. Bitcoin has behaved more like a risk asset than an independent diversifier, but in the recent past,
+from oveserving the pearson plot, we can say that bitcoin has been acting as a diversifier, but with high volatility.
 
 The most challenging part of the project was making the process robust and fully automated. Setting up GitHub Actions to run R scripts
 on a schedule required attention to package installation, file paths and permissions. The workflow needed to pull new data, update the
 CSV, regenerate plots and commit changes to the repository without manual intervention. Real-world financial data also introduced issues
 such as missing dates, non-trading days and periods with incomplete Bitcoin history. These needed to be aligned before computing
 correlations. Working through these challenges showed how much effort goes into a reliable data pipeline compared to a one-time analysis.
-Beyond statistical ideas, details like date handling, incremental updates and clear visual design were critical. The project demonstrated
-the value of reproducible workflows and automated scheduling for time series analysis that needs to stay current. It also provided
-experience in turning messy web data into visual summaries that others can interpret at a glance.
+Beyond statistical ideas, details like date handling, incremental updates and clear visual design were critical, alongside matching data types
+that were being retrieved from different sources. The project demonstrated the value of reproducible workflows and automated scheduling 
+for time series analysis that needs to stay current. It also provided experience in turning messy web data into visual summaries that others 
+can interpret at a glance.
 
