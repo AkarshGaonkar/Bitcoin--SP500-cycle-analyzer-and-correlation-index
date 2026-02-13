@@ -1,6 +1,6 @@
 # Daily BTC/SP500 Analysis
 
-Latest update: Thu Feb 12 07:05:34 UTC 2026
+Latest update: Fri Feb 13 07:04:13 UTC 2026
 
 Hello my name is Akarsh, and this is my project. 
 This project tracks the relationship between Bitcoin and the S&P 500 using two live, web-based data sources that update every trading day.
@@ -17,14 +17,14 @@ combined chart overlays both so a viewer with no finance background can see when
 periods when both spike or crash at the same time versus periods when Bitcoin behaves differently from stocks. 
 ## Visualizations
 
-### BTC RETURN
-![BTC-RETURN](./btc_return.png)
+### BTC SP500 OVERLAY
+![BTC-SP500-OVERLAY](./btc_sp500_overlay.png)
 
 ### SP500 RETURNS
 ![SP500-RETURNS](./sp500_returns.png)
 
-### BTC SP500 OVERLAY
-![BTC-SP500-OVERLAY](./btc_sp500_overlay.png)
+### BTC RETURN
+![BTC-RETURN](./btc_return.png)
 
 ## Final Report and Overview
 
